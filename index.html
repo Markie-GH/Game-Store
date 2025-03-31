@@ -30,7 +30,8 @@
             display: flex;
             justify-content: space-evenly;
             width: 100%;
-            background-color: rgba(255, 255, 255, 0.8);
+            background: rgba(10, 10, 25, 0.9);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
             padding: 15px 0;
             position: fixed;
             top: 0;
@@ -40,10 +41,17 @@
         .navbar button {
             padding: 10px 20px;
             border: none;
+            color: rgb(0, 0, 0);
             border-radius: 20px;
-            background-color: rgba(218, 157, 51, 1);
-            font-size: 16px;
+            background-color: #3200ba;
+            box-shadow: 0 5px 12px rgba(30, 0, 146, 0.7);
+            font-size: 12px;
             cursor: pointer;
+        }
+
+        .navbar button:hover {
+            background-color: #9879c4;
+            box-shadow: 1px 8px 15px 1px rgba(30, 0, 146, 0.7);
         }
 
         main {
@@ -53,10 +61,11 @@
             flex-direction: column;
             flex-grow: 1;
             gap: 10px;
-            background-color: rgba(128, 128, 128, 0.4);
+            background: rgba(50, 50, 50, 0.7);
+            color: #ffffff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         .game-listing {
@@ -69,9 +78,10 @@
         .game-card {
             width: 200px;
             padding: 10px;
-            background-color: #fff;
+            background: linear-gradient(to bottom, #222831, #393e46);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            color: #eeeeee;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
 
@@ -81,13 +91,14 @@
         }
 
         .game-card h3 {
+            color: #f8fbfc;            
             font-size: 18px;
             margin: 10px 0;
         }
 
         .game-card p {
             font-size: 14px;
-            color: #555;
+            color: #d1d1d1;
         }
 
         /* Modal Styling */
@@ -97,14 +108,15 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: white;
+            background: #1b1b1b;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+            color: #f4f8f8;            
             padding: 20px;
             border-radius: 10px;
             width: 80%;
             max-width: 600px;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
             z-index: 9999;
         }
 
@@ -120,11 +132,23 @@
         }
 
         .modal .close-btn {
-            background-color: #ff6347;
+            background: #ff4444;
+            box-shadow: 0 3px 7px rgba(255, 68, 68, 0.5);
         }
 
+        .modal .close-btn:hover {
+            background: #f05b5b;
+            box-shadow: 0 5px 12px rgba(255, 68, 68, 0.7);
+        }
+        
         .modal .add-to-cart-btn {
-            background-color: #32cd32;
+            background: #6a11cb;
+            box-shadow: 0 3px 7px rgba(106, 17, 203, 0.5);
+        }
+
+        .modal .add-to-cart-btn:hover {
+            background: #8d4ec9;
+            box-shadow: 0 5px 12px rgba(106, 17, 203, 0.7);
         }
 
         /* To prevent overflow */
@@ -135,11 +159,17 @@
 
         .game-card a {
             text-decoration: none;
-            color: white;
-            background-color: #218838;
+            color: #f7f1f1;            
+            background-color: #4e2188;
+            box-shadow: 0 2px 5px rgba(106, 17, 203, 0.7);
             padding: 10px;
             border-radius: 5px;
             cursor: pointer;
+        }
+
+        .game-card a:hover {
+            background-color: #8045c0;
+            box-shadow: 0 5px 7px rgba(106, 17, 203, 0.7);
         }
 
         .pagination-btns {
@@ -149,12 +179,19 @@
         }
 
         .pagination-btns button {
-            background-color: #008cba;
+            background: #3200ba;
+            box-shadow: 0 3px 7px rgba(50, 0, 186, 0.5);
             color: white;
-            padding: 10px 20px;
+            font-size: 16px;
+            padding: 20px 40px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+        }
+
+        .pagination-btns button:hover {
+            background: #634199;
+            box-shadow: 0 9px 16px rgba(50, 0, 186, 0.7);
         }
 
         .pagination-btns button:disabled {
@@ -166,9 +203,9 @@
 
 <body>
     <div class="navbar">
-        <button>Game Gallery</button>
-        <button>Home Page</button>
-        <button>Sign Up</button>
+        <button><h2>Game Gallery</h2></button>
+        <button><h2>Home Page</h2></button>
+        <button><h2>Sign Up</h2></button>
     </div>
 
     <main>
