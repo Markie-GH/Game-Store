@@ -227,7 +227,7 @@
             <p id="gamePlatforms"></p>
         </div>
         <div>
-            <button class="add-to-cart-btn">Add to Cart</button>
+            <a id = "gameBuy" class="add-to-cart-btn" target="_blank ">Buy on Steam</a>
             <button class="close-btn" onclick="closeModal()">Close</button>
         </div>
     </div>
@@ -278,6 +278,12 @@
                 document.getElementById('gameDescription').textContent = data.description_raw;
                 document.getElementById('gameReleaseDate').textContent = `Release Date: ${data.released}`;
                 document.getElementById('gamePlatforms').textContent = `Platforms: ${data.platforms.map(platform => platform.platform.name).join(', ')}`;
+                const buyGameBtn = document.getElementById('gameBuy');
+            if (buyGameBtn) {
+                const steamStore = data.stores?.find(store => store.store.name === "Steam");
+                buyGameBtn.href = steamStore?.url || `https://store.steampowered.com/search/?term=${encodeURIComponent(data.name)}`;
+                buyGameBtn.style.display = steamStore ? "inline-block" : "none"; 
+            }
                 document.getElementById('gameModal').style.display = 'block';
             } catch (error) {
                 console.error(error);
