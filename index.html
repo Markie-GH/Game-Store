@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Store</title>
     <style>
-        html, body {
-            height: 100%; /* Ensures full height coverage */
+        html,
+        body {
+            height: 100%;
+            /* Ensures full height coverage */
             margin: 0;
             padding: 0;
         }
+
         body {
             font-family: Arial, sans-serif;
             display: flex;
@@ -21,12 +25,11 @@
             background-repeat: no-repeat;
             background-attachment: fixed;
             min-height: 100vh;
-        
         }
+
         .navbar {
             display: flex;
             justify-content: space-evenly;
-            gap: 20px;
             width: 100%;
             background-color: rgba(255, 255, 255, 0.8);
             padding: 15px 0;
@@ -34,21 +37,41 @@
             top: 0;
             left: 0;
         }
+
         .navbar button {
             padding: 10px 20px;
             border: none;
             border-radius: 20px;
-            background-color: rgba(218, 157, 51);
+            background-color: rgba(218, 157, 51, 1);
             font-size: 16px;
             cursor: pointer;
         }
+
+        main {
+            width: 80%;
+            margin-top: 80px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            gap: 10px;
+            background-color: rgba(128, 128, 128, 0.4);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
     </style>
 </head>
+
 <body>
     <div class="navbar">
         <button>Game Gallery</button>
         <button>Home Page</button>
         <button>Sign Up</button>
     </div>
+    <main>
+        <!-- Game cards go here -->
+    </main>
 </body>
+
 </html>
