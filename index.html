@@ -1,3 +1,54 @@
-Hi ron
-Hi kervon
-Hi jermarkie
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Store</title>
+    <style>
+        html, body {
+            height: 100%; /* Ensures full height coverage */
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-image: url('photosFolder/bgWebsite.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+        
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-evenly;
+            gap: 20px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+        .navbar button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: rgba(218, 157, 51);
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <button>Game Gallery</button>
+        <button>Home Page</button>
+        <button>Sign Up</button>
+    </div>
+</body>
+</html>
