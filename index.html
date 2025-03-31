@@ -9,7 +9,6 @@
         html,
         body {
             height: 100%;
-            /* Ensures full height coverage */
             margin: 0;
             padding: 0;
         }
@@ -60,6 +59,108 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
+        .game-listing {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .game-card {
+            width: 200px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .game-card img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+
+        .game-card h3 {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .game-card p {
+            font-size: 14px;
+            color: #555;
+        }
+
+        /* Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+        }
+
+        .modal .close-btn,
+        .modal .add-to-cart-btn {
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .modal .close-btn {
+            background-color: #ff6347;
+        }
+
+        .modal .add-to-cart-btn {
+            background-color: #32cd32;
+        }
+
+        /* To prevent overflow */
+        .modal-content {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .game-card a {
+            text-decoration: none;
+            color: white;
+            background-color: #218838;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .pagination-btns {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .pagination-btns button {
+            background-color: #008cba;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .pagination-btns button:disabled {
+            background-color: #dddddd;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 
@@ -69,9 +170,106 @@
         <button>Home Page</button>
         <button>Sign Up</button>
     </div>
+
     <main>
-        <!-- Game cards go here -->
+        <div id="listing" class="game-listing">
+            <!-- Game cards will be displayed here -->
+        </div>
+        <div class="pagination-btns">
+            <button id="prevBtn" onclick="prevPage()">Prev</button>
+            <button id="nextBtn" onclick="nextPage()">Next</button>
+        </div>
     </main>
+
+    <div class="modal" id="gameModal">
+        <div class="modal-content">
+            <h2 id="gameName"></h2>
+            <img id="gameImage" src="" alt="" style="width:100%; border-radius: 8px;">
+            <p id="gameDescription"></p>
+            <p id="gameReleaseDate"></p>
+            <p id="gamePlatforms"></p>
+        </div>
+        <div>
+            <button class="add-to-cart-btn">Add to Cart</button>
+            <button class="close-btn" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        const apiKey = 'eec4ab94c24d453fab811341d8f88fa7';
+        let currentPage = 1;
+        const gamesPerPage = 12;
+        let totalGames = 0;
+
+        // Function to load games
+        async function loadGames() {
+            const url = `https://api.rawg.io/api/games?key=${apiKey}&page=${currentPage}&page_size=${gamesPerPage}`;
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                totalGames = data.count;
+                displayGames(data.results);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        // Function to display games on the page
+        function displayGames(games) {
+            const gameList = document.getElementById('listing');
+            gameList.innerHTML = '';
+            games.forEach(game => {
+                const gameCard = document.createElement('div');
+                gameCard.classList.add('game-card');
+                gameCard.innerHTML = `
+                    <h3>${game.name}</h3>
+                    <img src="${game.background_image ? game.background_image : 'https://via.placeholder.com/200'}" alt="${game.name}">
+                    <a href="javascript:void(0)" onclick="viewDetails(${game.id})">View Details</a>
+                `;
+                gameList.appendChild(gameCard);
+            });
+        }
+
+        // Function to show the game details modal
+        async function viewDetails(gameId) {
+            const url = `https://api.rawg.io/api/games/${gameId}?key=${apiKey}`;
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                document.getElementById('gameName').textContent = data.name;
+                document.getElementById('gameImage').src = data.background_image;
+                document.getElementById('gameDescription').textContent = data.description_raw;
+                document.getElementById('gameReleaseDate').textContent = `Release Date: ${data.released}`;
+                document.getElementById('gamePlatforms').textContent = `Platforms: ${data.platforms.map(platform => platform.platform.name).join(', ')}`;
+                document.getElementById('gameModal').style.display = 'block';
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            document.getElementById('gameModal').style.display = 'none';
+        }
+
+        // Pagination Functions
+        function nextPage() {
+            if (currentPage * gamesPerPage < totalGames) {
+                currentPage++;
+                loadGames();
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                loadGames();
+            }
+        }
+
+        // Initialize the page
+        loadGames();
+    </script>
 </body>
 
 </html>
