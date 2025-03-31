@@ -4,7 +4,7 @@ Welcome to our Game Store Website project! This website is designed to provide a
 ✨ Features
 🛍️ Browse and search for games
 
-💰 Secure checkout system
+💰 Direct link to purchase games
 
 🎨 User-friendly interface
 
