@@ -1,4 +1,64 @@
-welcome page coming here.
+<!DOCTYPE html>
+<html lang="en">
 
-- Link it to the home page button from index.html
-- Add a redirect to the game gallery
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Store - Home</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-image: url('photosFolder/bgWebsite.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .container h1 {
+            color: white;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .browse-btn {
+            padding: 15px 30px;
+            font-size: 20px;
+            color: white;
+            background-color: #3200ba;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 5px 12px rgba(30, 0, 146, 0.7);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .browse-btn:hover {
+            background-color: #9879c4;
+            box-shadow: 0 8px 15px rgba(30, 0, 146, 0.7);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Welcome to Game Go!</h1>
+        <a href="index.html" class="browse-btn">Browse Games</a>
+    </div>
+</body>
+
+</html>
