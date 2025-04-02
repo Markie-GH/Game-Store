@@ -206,8 +206,9 @@
         <a href="homepage.html">
             <button>Home Page</button>
         </a>
-        <button>Sign Up</button>
-        <button>Login</button>
+        <button onclick="toggleForm('signUpModal')">Sign Up</button>
+        <button onclick="toggleForm('loginModal')">Login</button>
+
 
     </div>
 
@@ -234,7 +235,34 @@
             <button class="close-btn" onclick="closeModal()">Close</button>
         </div>
     </div>
+    <!-- Sign Up Modal -->
+<div id="signUpModal" class="modal">
+    <div class="modal-content">
+        <h2>Sign Up</h2>
+        <form name="signUpForm">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Enter</button>
+        </form>
+        <button class="close-btn" onclick="closeModal('signUpModal')">Close</button>
+    </div>
+</div>
 
+<!-- Login Modal -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <h2>Login</h2>
+        <form name="loginForm">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Enter</button>
+        </form>
+        <button class="close-btn" onclick="closeModal('loginModal')">Close</button>
+    </div>
+</div>
+
+    
     <script>
         const apiKey = 'eec4ab94c24d453fab811341d8f88fa7';
         let currentPage = 1;
@@ -282,7 +310,7 @@
                 document.getElementById('gameReleaseDate').textContent = `Release Date: ${data.released}`;
                 document.getElementById('gamePlatforms').textContent = `Platforms: ${data.platforms.map(platform => platform.platform.name).join(', ')}`;
                 const buyGameBtn = document.getElementById('gameBuy');
-            if (buyGameBtn) {
+            if (buyGameBtn) {//sends the user to the steam page with the specific game they wish to buy
                 const steamStore = data.stores?.find(store => store.store.name === "Steam");
                 buyGameBtn.href = steamStore?.url || `https://store.steampowered.com/search/?term=${encodeURIComponent(data.name)}`;
                 buyGameBtn.style.display = steamStore ? "inline-block" : "none"; 
@@ -291,11 +319,110 @@
             } catch (error) {
                 console.error(error);
             }
+        }  async function postData(url, data) {
+            try {
+                let response = await fetch(url, {
+                    method: 'POST',
+                    body: JSON.stringify(data),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                let result = await response.json();
+                console.log(result);
+                alert('Sign-up successful!');
+            } catch (error) {
+                console.error(error);
+                alert('Something went wrong. Please try again.');
+            }
+        }
+
+        async function getData(url) {
+            try {
+                let response = await fetch(url);
+                return await response.json();
+            } catch (error) {
+                console.error(error);
+                return null;
+            }
+        }
+
+        function toggleForm(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Form validation for Sign-Up
+        async function validateSignUpForm(event) {
+            event.preventDefault();
+
+            const myForm = event.target;
+            const username = myForm.username.value.trim();
+            const password = myForm.password.value;
+            const email = myForm.email.value.trim();
+
+            if (username.length < 8) {//error checking
+                alert('Username must be at least 8 characters long.');
+                return;
+            }
+
+            const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+            if (!passwordPattern.test(password)) {//error checking
+                alert('Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, and a number.');
+                return;
+            }
+                //errror checking
+            if (!email.includes('@') || !email.includes('.')) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+                //using lab8 code
+            const formData = new FormData(myForm);
+            const data = Object.fromEntries(formData);
+            postData('https://nmendezapps.firebaseio.com/users.json', data);
+            myForm.reset();
+            alert('Sign-up successful!');
+            closeModal('signUpModal');
+        }
+
+        // Form validation for Login
+        async function validateLoginForm(event) {
+            event.preventDefault();
+
+            const myForm = event.target;
+            const email = myForm.email.value.trim();
+            const password = myForm.password.value;
+                //using lab8 code
+            const users = await getData('https://nmendezapps.firebaseio.com/users.json');
+            if (!users) {//error checking
+                alert('Error fetching user data. Try again later.');
+                return;
+            }
+                //finds the corresponding email and password
+            const userFound = Object.values(users).find(user => user.email === email && user.password === password);
+            
+            if (userFound) {//standard error checking
+                alert('Login successful!');
+                closeModal('loginModal');
+            } else {
+                alert('Invalid email or password. Please try again.');
+            }
+        }
+
+        // Event listeners for form submissions
+        document.querySelector('form[name="signUpForm"]').addEventListener('submit', validateSignUpForm);
+        document.querySelector('form[name="loginForm"]').addEventListener('submit', validateLoginForm);
+
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
         }
 
         // Function to close the modal
-        function closeModal() {
-            document.getElementById('gameModal').style.display = 'none';
+        function closeModal(modalID) {
+            document.getElementById(modalID).style.display = 'none';
         }
 
         // Pagination Functions
