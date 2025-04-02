@@ -245,7 +245,7 @@
             <input type="password" name="password" placeholder="Password" required>
             <button type="submit">Enter</button>
         </form>
-        <button class="close-btn" onclick="closeModal('signUpModal')">Close</button>
+        <button class="close-btn" onclick="closeSignUpModal('signUpModal')">Close</button>
     </div>
 </div>
 
@@ -258,7 +258,7 @@
             <input type="password" name="password" placeholder="Password" required>
             <button type="submit">Enter</button>
         </form>
-        <button class="close-btn" onclick="closeModal('loginModal')">Close</button>
+        <button class="close-btn" onclick="closeLoginModal('loginModal')">Close</button>
     </div>
 </div>
 
@@ -345,7 +345,7 @@
                 return null;
             }
         }
-
+        // Function to toggle the visibility of the Sign-Up and Login forms
         function toggleForm(modalId) {
             const modal = document.getElementById(modalId);
             modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
@@ -419,10 +419,15 @@
         function openModal(modalId) {
             document.getElementById(modalId).style.display = 'block';
         }
-
+        function closeSignUpModal() {
+            document.getElementById('signUpModal').style.display = 'none';
+        }
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
         // Function to close the modal
-        function closeModal(modalID) {
-            document.getElementById(modalID).style.display = 'none';
+        function closeModal(modalID) {//sorry for editing this
+            document.getElementById('gameModal').style.display = 'none';
         }
 
         // Pagination Functions
