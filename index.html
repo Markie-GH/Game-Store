@@ -443,6 +443,7 @@
                 alert('Invalid email or password. Please try again.');
             }
         }
+        //UI, logged in/ sign out, login, sign up
         document.addEventListener('DOMContentLoaded', function () {
             const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
 
@@ -450,13 +451,14 @@
             document.querySelector('button[onclick="toggleForm(\'loginModal\')"]').style.display = isLoggedIn ? 'none' : 'block';
             document.getElementById('signOutBtn').style.display = isLoggedIn ? 'block' : 'none';
         });
+        //If user click, prompt auth
         document.getElementById('secretRoomBtn').addEventListener('click', function (event) {
             if (localStorage.getItem('loggedIn') !== 'true') {
                 event.preventDefault();  // Prevent navigation to Secret Room page
                 alert('You need to log in first to access the Secret Room!');
             }
         });
-
+        // Auth for secret room
         document.addEventListener('DOMContentLoaded', function () {
             if (localStorage.getItem('loggedIn') !== 'true') {
                 console.log('User not logged in. Please log in to access the Secret Room.');
