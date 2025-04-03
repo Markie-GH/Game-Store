@@ -198,16 +198,17 @@
             background-color: #dddddd;
             cursor: not-allowed;
         }
+
         #enterButton {
-            background-color: #4CAF50; /* Green background */
-            color: white; /* White text */
-            border: 2px solid #4CAF50; /* Green border */
-            padding: 10px 20px; /* Padding for size */
-            font-size: 16px; /* Text size */
-            font-weight: bold; /* Bold text */
-            border-radius: 5px; /* Slightly rounded corners */
-            cursor: pointer; /* Pointer cursor on hover */
-            transition: background-color 0.3s ease; /* Smooth background change */
+            background-color: #4CAF50;
+            color: white;
+            border: 2px solid #4CAF50;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
     </style>
 </head>
@@ -430,12 +431,25 @@
 
             if (userFound) {
                 alert('Login successful!');
-                localStorage.setItem('loggedIn', 'true');  // Store the login status in localStorage
+                localStorage.setItem('loggedIn', 'true');
+
+                // Hide login/signup buttons, show sign-out button
+                document.querySelector('button[onclick="toggleForm(\'signUpModal\')"]').style.display = 'none';
+                document.querySelector('button[onclick="toggleForm(\'loginModal\')"]').style.display = 'none';
+                document.getElementById('signOutBtn').style.display = 'block';
+
                 closeLoginModal();
             } else {
                 alert('Invalid email or password. Please try again.');
             }
         }
+        document.addEventListener('DOMContentLoaded', function () {
+            const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+
+            document.querySelector('button[onclick="toggleForm(\'signUpModal\')"]').style.display = isLoggedIn ? 'none' : 'block';
+            document.querySelector('button[onclick="toggleForm(\'loginModal\')"]').style.display = isLoggedIn ? 'none' : 'block';
+            document.getElementById('signOutBtn').style.display = isLoggedIn ? 'block' : 'none';
+        });
         document.getElementById('secretRoomBtn').addEventListener('click', function (event) {
             if (localStorage.getItem('loggedIn') !== 'true') {
                 event.preventDefault();  // Prevent navigation to Secret Room page
@@ -450,15 +464,15 @@
         });
         // Handle Sign Out
         document.getElementById('signOutBtn').addEventListener('click', function () {
-            // Clear login status from localStorage
             localStorage.removeItem('loggedIn');
 
-            // Inform the user and update the UI
             alert('You have successfully logged out.');
+            window.location.href = 'homepage.html';
 
-            window.location.href = 'homepage.html'; 
-
-            document.getElementById('secretRoomBtn').style.display = 'none'; 
+            // Show login/signup buttons, hide sign-out button
+            document.querySelector('button[onclick="toggleForm(\'signUpModal\')"]').style.display = 'block';
+            document.querySelector('button[onclick="toggleForm(\'loginModal\')"]').style.display = 'block';
+            document.getElementById('signOutBtn').style.display = 'none';
         });
         // Event listeners for form submissions
         document.querySelector('form[name="signUpForm"]').addEventListener('submit', validateSignUpForm);
