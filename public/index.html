@@ -210,21 +210,23 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
-        #postcomButton {
-    background-color: #4CAF50; /* green */
-    color: white;
-    padding: 10px 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    margin-top: 8px;
-    transition: background-color 0.2s ease;
-}
 
-#postcomButton:hover {
-    background-color: #45a049;
-}
+        #postcomButton {
+            background-color: #4CAF50;
+            /* green */
+            color: white;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 8px;
+            transition: background-color 0.2s ease;
+        }
+
+        #postcomButton:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 
@@ -234,11 +236,11 @@
             <button>Home Page</button>
         </a>
         <a href="secret.html">
-            <button id="secretRoomBtn">Secret Room</button>
+            <button id="secretRoomBtn" onclick="enterSecretRoom()">Secret Room</button>
         </a>
         <button onclick="toggleForm('signUpModal')">Sign Up</button>
         <button onclick="toggleForm('loginModal')">Login</button>
-        <button id="signOutBtn">Sign Out</button>
+        <button id="signOutBtn" style="display: none;">Sign Out</button> <!-- Hidden by default -->
 
 
     </div>
@@ -252,7 +254,9 @@
             <button id="nextBtn" onclick="nextPage()">Next</button>
         </div>
     </main>
-
+    <div id="thankYouPopup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #4CAF50; color: white; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); z-index: 1000;">
+        Thanks for the comment!
+    </div>
     <div class="modal" id="gameModal">
         <div class="modal-content">
             <h2 id="gameName"></h2>
@@ -264,10 +268,9 @@
         <div id="commentSec">
             <h3>Comment Section</h3>
             <div style="margin-top: 10px;">
-                <textarea id="comInput" placeholder="Write your comment here..." rows="3" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ccc;"></textarea>
-                <button id="postcomButton">Post Comment</button>
-                <div id="commentContain">
-                    
+                <textarea id="comInput" placeholder="Write your comment here..." rows="3"
+                    style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ccc;"></textarea>
+                    <button id="postcomButton" onclick="postComment()">Post Comment</button>
                 </div>
             </div>
         </div>
@@ -281,12 +284,12 @@
         <div class="modal-content">
             <h2>Sign Up</h2>
             <form name="signUpForm">
-                <input type="text" name="username" placeholder="Username" required>
-                <input type="email" name="email" placeholder="Email" required>
-                <input type="password" name="password" placeholder="Password" required>
-                <button type="submit" id="signupSubmitButton">Enter</button>
+                <input type="text" id="signUpUsername" placeholder="Username" required>
+                <input type="email" id="signUpEmail" placeholder="Email" required>
+                <input type="password" id="signUpPassword" placeholder="Password" required>
+                <button type="button" onclick="signUpUser()">Sign Up</button>
             </form>
-            <button class="close-btn" onclick="closeSignUpModal('signUpModal')">Close</button>
+            <button class="close-btn" onclick="closeModal('signUpModal')">Close</button>
         </div>
     </div>
 
@@ -295,69 +298,72 @@
         <div class="modal-content">
             <h2>Login</h2>
             <form name="loginForm">
-                <input type="email" name="email" placeholder="Email" required>
-                <input type="password" name="password" placeholder="Password" required>
-                <button type="submit" id="loginSubmitButton">Enter</button>
+                <input type="email" id="loginEmail" placeholder="Email" required>
+                <input type="password" id="loginPassword" placeholder="Password" required>
+                <button type="button" onclick="loginUser()">Login</button>
             </form>
-            <button class="close-btn" onclick="closeLoginModal('loginModal')">Close</button>
+            <button class="close-btn" onclick="closeModal('loginModal')">Close</button>
         </div>
     </div>
 
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-            import { getAuth } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-            import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";  // Fixed import
+        
+        // Firebase configuration
 
-            // Firebase configuration
-            
-          const firebaseConfig = {
-            apiKey: "eec4ab94c24d453fab811341d8f88fa7",
+        const firebaseConfig = {
+            apiKey: "AIzaSyC_Uw3e88dd7RWOvIC8l2cvztWC1L9J8Cg",
             authDomain: "game-store-8c3d3.firebaseapp.com",
             projectId: "game-store-8c3d3",
-            storageBucket: "game-store-8c3d3.appspot.com",
+            storageBucket: "game-store-8c3d3.appspot.com", //  FIXED HERE
             messagingSenderId: "336531520883",
-            appId: "1:1234567890:web:abcdef123456",
-            
-            };
+            appId: "1:336531520883:web:58e10b48e1d422e3079906",
+            measurementId: "G-XBFCZZ418E"
+        };
 
-            // Initialize Firebase
-            const app = initializeApp(firebaseConfig);
-            const auth = getAuth(app);
-          const db = getFirestore(app);
-        
-            
-            
-            const apiKey = 'eec4ab94c24d453fab811341d8f88fa7';
-            let currentPage = 1;
-            const gamesPerPage = 10;
-            let totalGames = 0;
-            async function fetchGames() {
-                try {
-                    const querySnapshot = await getDocs(collection(db, "games"));
-                    const games = [];
-                    querySnapshot.forEach((doc) => {
-                        games.push({ ...doc.data(), id: doc.id });
-                    });
-                    displayGames(games);
-                } catch (error) {
-                    console.error("Error fetching games: ", error);
-                }
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+
+
+        const rawgApiKey = 'eec4ab94c24d453fab811341d8f88fa7';
+        let currentPage = 1;
+        const gamesPerPage = 10;
+        let totalGames = 0;
+
+
+
+        async function fetchGames() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "games"));
+                const games = [];
+                querySnapshot.forEach((doc) => {
+                    games.push({ ...doc.data(), id: doc.id });
+                });
+                displayGames(games);
+            } catch (error) {
+                console.error("Error fetching games: ", error);
             }
+        }
 
-            async function loadGames() {
-                const url = `https://api.rawg.io/api/games?key=eec4ab94c24d453fab811341d8f88fa7&page=${currentPage}&page_size=${gamesPerPage}`;
-                try {
-                    const response = await fetch(url);
-                    const data = await response.json();
-                    totalGames = data.count;
-                    displayGames(data.results);
-                } catch (error) {
-                    console.error(error);
-                }
+        async function loadGames() {
+            const url = `https://api.rawg.io/api/games?key=${rawgApiKey}&page=${currentPage}&page_size=${gamesPerPage}`;
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                totalGames = data.count;
+                displayGames(data.results);  // Display the games in the UI
+            } catch (error) {
+                console.error('Error fetching data from RAWG API: ', error);
             }
+        }
 
-            function displayGames(games) {
+        function displayGames(games) {
             const gameList = document.getElementById('listing');
             gameList.innerHTML = '';
             games.forEach(game => {
@@ -371,51 +377,128 @@
                 gameList.appendChild(gameCard);
             });
         }
-           // console.log(game.id); // Check if it's defined
-            let currentGameId = '';//store game ID
-            function showGameDetails(gameId) {
-                const gameRef = doc(db, "games", gameId);
-                getDoc(gameRef).then((docSnap) => {
-                    const game = docSnap.data();
-                    document.getElementById('gameName').innerText = game.name;
-                    document.getElementById('gameImage').src = game.image;
-                    document.getElementById('gameDescription').innerText = game.description;
-                    document.getElementById('gameReleaseDate').innerText = `Release Date: ${game.releaseDate}`;
-                    document.getElementById('gamePlatforms').innerText = `Platforms: ${game.platforms.join(', ')}`;
-                    document.getElementById('gameModal').style.display = 'block';
-                });
-            }
-            // Pagination functions
-                        function prevPage() {
-                            if (currentPage > 1) {
-                                currentPage--;
-                                loadGames();
-                            }
-                        }
+        function enterSecretRoom() {
+            const auth = getAuth();  // Get the Firebase Authentication instance
 
-                        function nextPage() {
-                            currentPage++;
-                            loadGames();
-                        }
+            // Check if the user is logged in using Firebase Authentication
+            if (!auth.currentUser) {
+                alert('You need to log in first to enter the secret room!');
+                return;  // Prevent the redirect if the user is not logged in
+            }else{
 
-                function toggleForm(modalId) {
-                const modal = document.getElementById(modalId);
-                modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
-            }
-            function closeModal() {
-                document.querySelectorAll('.modal').forEach(modal => modal.style.display = 'none');
+            // If the user is logged in, redirect to secret.html
+            window.location.href = "secret.html";
+        }
+    }
+
+        async function viewDetails(gameId) {
+            const auth = getAuth();  // Get the Firebase Authentication instance
+
+            // Check if the user is logged in using Firebase Authentication
+            if (!auth.currentUser) {
+                alert('You need to log in first to view the details!');
+                return;  // Prevent modal from opening if not logged in
             }
 
-           
+            // If logged in, call the function to fetch and display game details
+            showGameDetails(gameId);
+        }
+        window.viewDetails = viewDetails;
 
-           
+        // console.log(game.id); // Check if it's defined
+        let currentGameId = '';//store game ID
+        async function showGameDetails(gameId) {
+    const url = `https://api.rawg.io/api/games/${gameId}?key=${rawgApiKey}`;  // Replace with your actual API key
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
 
-            // Call loadsGames initially
-            document.addEventListener('DOMContentLoaded', () => {
-                  loadGames(); 
+        // Update the modal with game details
+        document.getElementById('gameName').innerText = data.name;
+        document.getElementById('gameImage').src = data.background_image || 'https://via.placeholder.com/200';  // Fallback to placeholder if no image
+        document.getElementById('gameDescription').innerText = data.description_raw || 'No description available';
+        document.getElementById('gameReleaseDate').innerText = `Release Date: ${data.released}`;
+        document.getElementById('gamePlatforms').innerText = `Platforms: ${data.platforms.map(platform => platform.platform.name).join(', ')}`;
 
-    });
+        // Buy on Steam button functionality
+        const buyGameBtn = document.getElementById('gameBuy');
+
+        if (buyGameBtn) {
+    // Look for Steam store URL
+    const steamStore = data.stores?.find(store => store.store.name === "Steam");
+
+    // Check if the Steam store exists and has a valid URL
+    if (steamStore && steamStore.url) {
+        buyGameBtn.href = steamStore.url;
+        buyGameBtn.style.display = "inline-block"; // Show the button
+    } else {
+        // Fallback to a Steam search link if no specific URL is found
+        buyGameBtn.href = `https://store.steampowered.com/search/?term=${encodeURIComponent(data.name)}`;
+        buyGameBtn.style.display = "inline-block"; // Show the button
+    }
+}
+
+        // Show the modal with game details
+        document.getElementById('gameModal').style.display = 'block';
+    } catch (error) {
+        console.error("Error fetching game details:", error);
+    }
+}
+
+        // Pagination functions
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                loadGames();
+            }
+        }
+
+        function nextPage() {
+            if (currentPage * gamesPerPage < totalGames) {
+                currentPage++;
+                loadGames();
+            }
+        }
+
+        // Attach functions to the global window object
+        window.prevPage = prevPage;
+        window.nextPage = nextPage;
+
+
+
+        function toggleForm(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Attach to the global window object
+        window.toggleForm = toggleForm;
+
+        function closeModal() {
+            document.querySelectorAll('.modal').forEach(modal => modal.style.display = 'none');
+        }
+
+
+
+        // Ensure the function is attached to the global window object if you're using inline onclick handlers
+        window.closeModal = closeModal;
+
+
+        // Call loadsGames initially
+        document.addEventListener('DOMContentLoaded', () => {
+            loadGames();
+
+        });
+        
     </script>
+    <script type="module" src="./auth.js"></script>
+    <script type="module">
+        import { postComment } from '../comments.js';
+    
+        // Attach the function to the global window object
+        window.postComment = postComment;
+    </script>
+
 </body>
 
 </html>
