@@ -266,6 +266,9 @@
             <div style="margin-top: 10px;">
                 <textarea id="comInput" placeholder="Write your comment here..." rows="3" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ccc;"></textarea>
                 <button id="postcomButton">Post Comment</button>
+                <div id="commentContain">
+                    
+                </div>
             </div>
         </div>
         <div>
@@ -308,7 +311,7 @@
 
             // Firebase configuration
             
-            const firebaseConfig = {
+          const firebaseConfig = {
             apiKey: "eec4ab94c24d453fab811341d8f88fa7",
             authDomain: "game-store-8c3d3.firebaseapp.com",
             projectId: "game-store-8c3d3",
@@ -321,14 +324,14 @@
             // Initialize Firebase
             const app = initializeApp(firebaseConfig);
             const auth = getAuth(app);
-            const db = getFirestore(app);
-        document.addEventListener('DOMContentLoaded', function () {
+          const db = getFirestore(app);
+        
             
             
             const apiKey = 'eec4ab94c24d453fab811341d8f88fa7';
             let currentPage = 1;
             const gamesPerPage = 10;
-
+            let totalGames = 0;
             async function fetchGames() {
                 try {
                     const querySnapshot = await getDocs(collection(db, "games"));
@@ -339,6 +342,18 @@
                     displayGames(games);
                 } catch (error) {
                     console.error("Error fetching games: ", error);
+                }
+            }
+
+            async function loadGames() {
+                const url = `https://api.rawg.io/api/games?key=eec4ab94c24d453fab811341d8f88fa7&page=${currentPage}&page_size=${gamesPerPage}`;
+                try {
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    totalGames = data.count;
+                    displayGames(data.results);
+                } catch (error) {
+                    console.error(error);
                 }
             }
 
@@ -357,7 +372,8 @@
                     gameListing.appendChild(gameCard);
                 });
             }
-
+            console.log(game.id); // Check if it's defined
+            let currentGameId = '';//store game ID
             function showGameDetails(gameId) {
                 const gameRef = doc(db, "games", gameId);
                 getDoc(gameRef).then((docSnap) => {
@@ -370,32 +386,36 @@
                     document.getElementById('gameModal').style.display = 'block';
                 });
             }
+            // Pagination functions
+                        function prevPage() {
+                            if (currentPage > 1) {
+                                currentPage--;
+                                loadGames();
+                            }
+                        }
 
+                        function nextPage() {
+                            currentPage++;
+                            loadGames();
+                        }
+
+                function toggleForm(modalId) {
+                const modal = document.getElementById(modalId);
+                modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+            }
             function closeModal() {
                 document.querySelectorAll('.modal').forEach(modal => modal.style.display = 'none');
             }
 
-            function toggleForm(modalId) {
-                const modal = document.getElementById(modalId);
-                modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
-            }
+           
 
-            // Pagination functions
-            function prevPage() {
-                if (currentPage > 1) {
-                    currentPage--;
-                    fetchGames();
-                }
-            }
+           
 
-            function nextPage() {
-                currentPage++;
-                fetchGames();
-            }
-
-            // Call fetchGames initially
-            fetchGames();
-        });
+            // Call loadsGames initially
+            loadGames(); 
+            document.addEventListener('DOMContentLoaded', () => {
+        // Call loadGames when the DOM is ready
+    });
     </script>
 </body>
 

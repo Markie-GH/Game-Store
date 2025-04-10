@@ -32,14 +32,22 @@ async function postComment(gameId, commentText) {
     }
 
     try {
+        // Add comment to Firestore under the game's specific document
         await addDoc(collection(db, "games", gameId.toString(), "comments"), {
-            user: user.email,  // or user.displayName if available
+            user: user.email,  // You can use user.displayName if it's available
             text: commentText,
-            timestamp: new Date().toISOString()  // Use a simple timestamp
+            timestamp: new Date().toISOString()  // Store the timestamp
         });
+
+        // After posting the comment, reload the comments for the game
+        loadComments(gameId);
+
+        // Clear the input field after posting the comment
+        document.getElementById("comInput").value = "";
+
         alert("Comment posted!");
-        loadComments(gameId); // Reload comments after posting
     } catch (error) {
         console.error("Error posting comment: ", error);
+        alert("There was an issue posting your comment.");
     }
 }
