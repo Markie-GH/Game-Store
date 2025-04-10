@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Store</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-image: url('photosFolder/bgWebsite.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-evenly;
+            width: 100%;
+            background: rgba(10, 10, 25, 0.9);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .navbar button {
+            padding: 10px 20px;
+            border: none;
+            color: rgb(248, 244, 244);
+            border-radius: 20px;
+            background-color: #3200ba;
+            box-shadow: 0 5px 12px rgba(30, 0, 146, 0.7);
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .navbar button:hover {
+            background-color: #9879c4;
+            box-shadow: 1px 8px 15px 1px rgba(30, 0, 146, 0.7);
+        }
+
+        main {
+            width: 80%;
+            margin-top: 80px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            gap: 10px;
+            background: rgba(50, 50, 50, 0.7);
+            color: #ffffff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .game-listing {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .game-card {
+            width: 200px;
+            padding: 10px;
+            background: linear-gradient(to bottom, #222831, #393e46);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            color: #eeeeee;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .game-card img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+
+        .game-card h3 {
+            color: #f8fbfc;
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .game-card p {
+            font-size: 14px;
+            color: #d1d1d1;
+        }
+
+        /* Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1b1b1b;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+            color: #f4f8f8;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            z-index: 9999;
+        }
+
+        .modal .close-btn,
+        .modal .add-to-cart-btn {
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .modal .close-btn {
+            background: #ff4444;
+            box-shadow: 0 3px 7px rgba(255, 68, 68, 0.5);
+        }
+
+        .modal .close-btn:hover {
+            background: #f05b5b;
+            box-shadow: 0 5px 12px rgba(255, 68, 68, 0.7);
+        }
+
+        .modal .add-to-cart-btn {
+            background: #6a11cb;
+            box-shadow: 0 3px 7px rgba(106, 17, 203, 0.5);
+        }
+
+        .modal .add-to-cart-btn:hover {
+            background: #8d4ec9;
+            box-shadow: 0 5px 12px rgba(106, 17, 203, 0.7);
+        }
+
+        /* To prevent overflow */
+        .modal-content {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .game-card a {
+            text-decoration: none;
+            color: #f7f1f1;
+            background-color: #4e2188;
+            box-shadow: 0 2px 5px rgba(106, 17, 203, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .game-card a:hover {
+            background-color: #8045c0;
+            box-shadow: 0 5px 7px rgba(106, 17, 203, 0.7);
+        }
+
+        .pagination-btns {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .pagination-btns button {
+            background: #3200ba;
+            box-shadow: 0 3px 7px rgba(50, 0, 186, 0.5);
+            color: white;
+            font-size: 16px;
+            padding: 20px 40px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .pagination-btns button:hover {
+            background: #634199;
+            box-shadow: 0 9px 16px rgba(50, 0, 186, 0.7);
+        }
+
+        .pagination-btns button:disabled {
+            background-color: #dddddd;
+            cursor: not-allowed;
+        }
+
+        #enterButton {
+            background-color: #4CAF50;
+            color: white;
+            border: 2px solid #4CAF50;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #postcomButton {
+    background-color: #4CAF50; /* green */
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 8px;
+    transition: background-color 0.2s ease;
+}
+
+#postcomButton:hover {
+    background-color: #45a049;
+}
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <a href="homepage.html">
+            <button>Home Page</button>
+        </a>
+        <a href="secret.html">
+            <button id="secretRoomBtn">Secret Room</button>
+        </a>
+        <button onclick="toggleForm('signUpModal')">Sign Up</button>
+        <button onclick="toggleForm('loginModal')">Login</button>
+        <button id="signOutBtn">Sign Out</button>
+
+
+    </div>
+
+    <main>
+        <div id="listing" class="game-listing">
+            <!-- Game cards will be displayed here -->
+        </div>
+        <div class="pagination-btns">
+            <button id="prevBtn" onclick="prevPage()">Prev</button>
+            <button id="nextBtn" onclick="nextPage()">Next</button>
+        </div>
+    </main>
+
+    <div class="modal" id="gameModal">
+        <div class="modal-content">
+            <h2 id="gameName"></h2>
+            <img id="gameImage" src="" alt="" style="width:100%; border-radius: 8px;">
+            <p id="gameDescription"></p>
+            <p id="gameReleaseDate"></p>
+            <p id="gamePlatforms"></p>
+        </div>
+        <div id="commentSec">
+            <h3>Comment Section</h3>
+            <div style="margin-top: 10px;">
+                <textarea id="comInput" placeholder="Write your comment here..." rows="3" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ccc;"></textarea>
+                <button id="postcomButton">Post Comment</button>
+            </div>
+        </div>
+        <div>
+            <a id="gameBuy" class="add-to-cart-btn" target="_blank ">Buy on Steam</a>
+            <button class="close-btn" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+    <!-- Sign Up Modal -->
+    <div id="signUpModal" class="modal">
+        <div class="modal-content">
+            <h2>Sign Up</h2>
+            <form name="signUpForm">
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit" id="signupSubmitButton">Enter</button>
+            </form>
+            <button class="close-btn" onclick="closeSignUpModal('signUpModal')">Close</button>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <h2>Login</h2>
+            <form name="loginForm">
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit" id="loginSubmitButton">Enter</button>
+            </form>
+            <button class="close-btn" onclick="closeLoginModal('loginModal')">Close</button>
+        </div>
+    </div>
+
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+            import { getAuth } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+            import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+            // Firebase configuration
+            
+            const firebaseConfig = {
+            apiKey: "eec4ab94c24d453fab811341d8f88fa7",
+            authDomain: "game-store-8c3d3.firebaseapp.com",
+            projectId: "game-store-8c3d3",
+            storageBucket: "game-store-8c3d3.appspot.com",
+            messagingSenderId: "336531520883",
+            appId: "1:1234567890:web:abcdef123456",
+            
+            };
+
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            const db = getFirestore(app);
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            
+            const apiKey = 'eec4ab94c24d453fab811341d8f88fa7';
+            let currentPage = 1;
+            const gamesPerPage = 10;
+
+            async function fetchGames() {
+                try {
+                    const querySnapshot = await getDocs(collection(db, "games"));
+                    const games = [];
+                    querySnapshot.forEach((doc) => {
+                        games.push({ ...doc.data(), id: doc.id });
+                    });
+                    displayGames(games);
+                } catch (error) {
+                    console.error("Error fetching games: ", error);
+                }
+            }
+
+            function displayGames(games) {
+                const gameListing = document.getElementById("listing");
+                gameListing.innerHTML = "";
+                games.forEach((game) => {
+                    const gameCard = document.createElement("div");
+                    gameCard.classList.add("game-card");
+                    gameCard.innerHTML = `
+                        <img src="${game.image}" alt="${game.name}">
+                        <h3>${game.name}</h3>
+                        <p>${game.description}</p>
+                        <a href="#" onclick="showGameDetails('${game.id}')">View Details</a>
+                    `;
+                    gameListing.appendChild(gameCard);
+                });
+            }
+
+            function showGameDetails(gameId) {
+                const gameRef = doc(db, "games", gameId);
+                getDoc(gameRef).then((docSnap) => {
+                    const game = docSnap.data();
+                    document.getElementById('gameName').innerText = game.name;
+                    document.getElementById('gameImage').src = game.image;
+                    document.getElementById('gameDescription').innerText = game.description;
+                    document.getElementById('gameReleaseDate').innerText = `Release Date: ${game.releaseDate}`;
+                    document.getElementById('gamePlatforms').innerText = `Platforms: ${game.platforms.join(', ')}`;
+                    document.getElementById('gameModal').style.display = 'block';
+                });
+            }
+
+            function closeModal() {
+                document.querySelectorAll('.modal').forEach(modal => modal.style.display = 'none');
+            }
+
+            function toggleForm(modalId) {
+                const modal = document.getElementById(modalId);
+                modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+            }
+
+            // Pagination functions
+            function prevPage() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    fetchGames();
+                }
+            }
+
+            function nextPage() {
+                currentPage++;
+                fetchGames();
+            }
+
+            // Call fetchGames initially
+            fetchGames();
+        });
+    </script>
+</body>
+
+</html>
