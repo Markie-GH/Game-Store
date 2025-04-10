@@ -358,21 +358,20 @@
             }
 
             function displayGames(games) {
-                const gameListing = document.getElementById("listing");
-                gameListing.innerHTML = "";
-                games.forEach((game) => {
-                    const gameCard = document.createElement("div");
-                    gameCard.classList.add("game-card");
-                    gameCard.innerHTML = `
-                        <img src="${game.image}" alt="${game.name}">
-                        <h3>${game.name}</h3>
-                        <p>${game.description}</p>
-                        <a href="#" onclick="showGameDetails('${game.id}')">View Details</a>
-                    `;
-                    gameListing.appendChild(gameCard);
-                });
-            }
-            console.log(game.id); // Check if it's defined
+            const gameList = document.getElementById('listing');
+            gameList.innerHTML = '';
+            games.forEach(game => {
+                const gameCard = document.createElement('div');
+                gameCard.classList.add('game-card');
+                gameCard.innerHTML = `
+                    <h3>${game.name}</h3>
+                    <img src="${game.background_image ? game.background_image : 'https://via.placeholder.com/200'}" alt="${game.name}">
+                    <a href="javascript:void(0)" onclick="viewDetails(${game.id})">View Details</a>
+                `;
+                gameList.appendChild(gameCard);
+            });
+        }
+           // console.log(game.id); // Check if it's defined
             let currentGameId = '';//store game ID
             function showGameDetails(gameId) {
                 const gameRef = doc(db, "games", gameId);
@@ -412,9 +411,9 @@
            
 
             // Call loadsGames initially
-            loadGames(); 
             document.addEventListener('DOMContentLoaded', () => {
-        // Call loadGames when the DOM is ready
+                  loadGames(); 
+
     });
     </script>
 </body>
