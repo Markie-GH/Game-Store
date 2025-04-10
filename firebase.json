@@ -1,0 +1,14 @@
+{
+  "firestore": {
+    "rules": "allow read: if true",
+    "indexes": "db.collection('comments').where('author', '==', 'user123')"
+  },
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
