@@ -217,6 +217,7 @@
         #postcomButton:hover {
             background-color: #45a049;
         }
+
         #enterButton {
             background-color: #4CAF50;
             color: white;
@@ -228,7 +229,27 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
-        
+
+        #signUpModal {
+            width: 60%;
+            /* Reduce the width */
+            max-width: 500px;
+            /* Set a maximum width */
+            padding: 20px;
+            box-sizing: border-box;
+            color: #1b1b1b;
+            background-color: rgb(218, 199, 177);
+        }
+        #loginModal {
+            width: 60%;
+            /* Reduce the width */
+            max-width: 350px;
+            /* Set a maximum width */
+            padding: 20px;
+            box-sizing: border-box;
+            color: #1b1b1b;
+            background-color: rgb(218, 199, 177);
+        }
     </style>
 </head>
 
@@ -264,7 +285,7 @@
             <p id="gameDescription"></p>
             <p id="gameReleaseDate"></p>
             <p id="gamePlatforms"></p>
-    
+
             <!-- Comment Section -->
             <div id="commentSec" style="margin-top: 20px;">
                 <h3>Comment Section</h3>
@@ -274,7 +295,7 @@
                     <button id="postcomButton" onclick="postComment()">Post Comment</button>
                 </div>
             </div>
-    
+
             <!-- Buy button and Close button -->
             <div style="margin-top: 20px; display: flex; justify-content: space-between;">
                 <a id="gameBuy" class="add-to-cart-btn" target="_blank">Buy on Steam</a>
@@ -316,7 +337,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
         import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";  // Fixed import
-        
+
         // Firebase configuration
 
         const firebaseConfig = {
@@ -389,12 +410,12 @@
             if (!auth.currentUser) {
                 alert('You need to log in first to enter the secret room!');
                 return;  // Prevent the redirect if the user is not logged in
-            }else{
+            } else {
 
-            // If the user is logged in, redirect to secret.html
-            window.location.href = "secret.html";
+                // If the user is logged in, redirect to secret.html
+                window.location.href = "secret.html";
+            }
         }
-    }
 
         async function viewDetails(gameId) {
             const auth = getAuth();  // Get the Firebase Authentication instance
@@ -413,42 +434,42 @@
         // console.log(game.id); // Check if it's defined
         let currentGameId = '';//store game ID
         async function showGameDetails(gameId) {
-    const url = `https://api.rawg.io/api/games/${gameId}?key=${rawgApiKey}`;  // Replace with your actual API key
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
+            const url = `https://api.rawg.io/api/games/${gameId}?key=${rawgApiKey}`;  // Replace with your actual API key
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
 
-        // Update the modal with game details
-        document.getElementById('gameName').innerText = data.name;
-        document.getElementById('gameImage').src = data.background_image || 'https://via.placeholder.com/200';  // Fallback to placeholder if no image
-        document.getElementById('gameDescription').innerText = data.description_raw || 'No description available';
-        document.getElementById('gameReleaseDate').innerText = `Release Date: ${data.released}`;
-        document.getElementById('gamePlatforms').innerText = `Platforms: ${data.platforms.map(platform => platform.platform.name).join(', ')}`;
+                // Update the modal with game details
+                document.getElementById('gameName').innerText = data.name;
+                document.getElementById('gameImage').src = data.background_image || 'https://via.placeholder.com/200';  // Fallback to placeholder if no image
+                document.getElementById('gameDescription').innerText = data.description_raw || 'No description available';
+                document.getElementById('gameReleaseDate').innerText = `Release Date: ${data.released}`;
+                document.getElementById('gamePlatforms').innerText = `Platforms: ${data.platforms.map(platform => platform.platform.name).join(', ')}`;
 
-        // Buy on Steam button functionality
-        const buyGameBtn = document.getElementById('gameBuy');
+                // Buy on Steam button functionality
+                const buyGameBtn = document.getElementById('gameBuy');
 
-        if (buyGameBtn) {
-    // Look for Steam store URL
-    const steamStore = data.stores?.find(store => store.store.name === "Steam");
+                if (buyGameBtn) {
+                    // Look for Steam store URL
+                    const steamStore = data.stores?.find(store => store.store.name === "Steam");
 
-    // Check if the Steam store exists and has a valid URL
-    if (steamStore && steamStore.url) {
-        buyGameBtn.href = steamStore.url;
-        buyGameBtn.style.display = "inline-block"; // Ensure the button is visible
-    } else {
-        // Fallback to a Steam search link if no specific URL is found
-        buyGameBtn.href = `https://store.steampowered.com/search/?term=${encodeURIComponent(data.name)}`;
-        buyGameBtn.style.display = "inline-block"; // Ensure the button is visible
-    }
-}
+                    // Check if the Steam store exists and has a valid URL
+                    if (steamStore && steamStore.url) {
+                        buyGameBtn.href = steamStore.url;
+                        buyGameBtn.style.display = "inline-block"; // Ensure the button is visible
+                    } else {
+                        // Fallback to a Steam search link if no specific URL is found
+                        buyGameBtn.href = `https://store.steampowered.com/search/?term=${encodeURIComponent(data.name)}`;
+                        buyGameBtn.style.display = "inline-block"; // Ensure the button is visible
+                    }
+                }
 
-        // Show the modal with game details
-        document.getElementById('gameModal').style.display = 'block';
-    } catch (error) {
-        console.error("Error fetching game details:", error);
-    }
-}
+                // Show the modal with game details
+                document.getElementById('gameModal').style.display = 'block';
+            } catch (error) {
+                console.error("Error fetching game details:", error);
+            }
+        }
 
         // Pagination functions
         function prevPage() {
@@ -494,12 +515,12 @@
             loadGames();
 
         });
-        
+
     </script>
     <script type="module" src="./auth.js"></script>
     <script type="module">
         import { postComment } from '../comments.js';
-    
+
         // Attach the function to the global window object
         window.postComment = postComment;
     </script>
