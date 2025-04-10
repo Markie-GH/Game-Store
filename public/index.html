@@ -222,12 +222,13 @@
             color: white;
             border: 2px solid #4CAF50;
             padding: 10px 20px;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
+        
     </style>
 </head>
 
@@ -284,13 +285,14 @@
     <!-- Sign Up Modal -->
     <div id="signUpModal" class="modal">
         <div class="modal-content">
-            <h2>Sign Up</h2>
+            <h2>Create your account</h2>
             <form name="signUpForm">
                 <input type="text" id="signUpUsername" placeholder="Username" required>
                 <input type="email" id="signUpEmail" placeholder="Email" required>
                 <input type="password" id="signUpPassword" placeholder="Password" required>
-                <button id="enterButton" type="button" onclick="signUpUser()">Sign Up</button>
             </form>
+            <br>
+            <button id="enterButton" type="button" onclick="signUpUser()">Sign Up</button>
             <button class="close-btn" onclick="closeModal('signUpModal')">Close</button>
         </div>
     </div>
@@ -298,12 +300,13 @@
     <!-- Login Modal -->
     <div id="loginModal" class="modal">
         <div class="modal-content">
-            <h2>Login</h2>
+            <h2>Login your account</h2>
             <form name="loginForm">
                 <input type="email" id="loginEmail" placeholder="Email" required>
                 <input type="password" id="loginPassword" placeholder="Password" required>
-                <button id="enterButton" type="button" onclick="loginUser()">Login</button>
             </form>
+            <br>
+            <button id="enterButton" type="button" onclick="loginUser()">Login</button>
             <button class="close-btn" onclick="closeModal('loginModal')">Close</button>
         </div>
     </div>
