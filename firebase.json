@@ -1,7 +1,7 @@
 {
   "firestore": {
-    "rules": "allow read: if true",
-    "indexes": "db.collection('comments').where('author', '==', 'user123')"
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
   },
   "hosting": {
     "public": "public",

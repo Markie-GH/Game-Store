@@ -1,29 +1,26 @@
-// Firebase config file (must import Firebase SDK to use the functions)
+// firebaseConfig.js
+
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
-// Firebase config (make sure to replace with your Firebase credentials)
+//  Fixed Firebase config
 const firebaseConfig = {
-  apiKey: "eec4ab94c24d453fab811341d8f88fa7",
+  apiKey: "AIzaSyC_Uw3e88dd7RWOvIC8l2cvztWC1L9J8Cg",
   authDomain: "game-store-8c3d3.firebaseapp.com",
   projectId: "game-store-8c3d3",
-  storageBucket: "game-store-8c3d3.appspot.com",
+  storageBucket: "game-store-8c3d3.appspot.com", //  FIXED HERE
   messagingSenderId: "336531520883",
-  appId: "1:1234567890:web:abcdef123456",
-  
-  };
+  appId: "1:336531520883:web:58e10b48e1d422e3079906",
+  measurementId: "G-XBFCZZ418E"
+};
 
-// Initialize Firebase
+//  Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
 
-export { auth };  // Export the auth object
-  
-  // Add a comment
-  await addDoc(collection(db, "comments"), {
-    author: "Alice",
-    text: "Nice game!",
-    timestamp: new Date()
-  });
-  
-export default firebaseConfig
+//  Firebase services
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+//  Export what you need
+export { auth, db, firebaseConfig };
