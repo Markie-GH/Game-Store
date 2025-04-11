@@ -240,6 +240,7 @@
             color: #1b1b1b;
             background-color: rgb(218, 199, 177);
         }
+
         #loginModal {
             width: 60%;
             /* Reduce the width */
@@ -264,6 +265,9 @@
         <button onclick="toggleForm('signUpModal')">Sign Up</button>
         <button onclick="toggleForm('loginModal')">Login</button>
         <button id="signOutBtn" style="display: none;">Sign Out</button> <!-- Hidden by default -->
+        <input type="search" id="searchInput" placeholder="Search games...">
+        <button id="searchBtn">Search</button>
+        <button id="refreshBtn">Refresh Games</button>
 
 
     </div>
@@ -377,15 +381,15 @@
             }
         }
 
-        async function loadGames() {
-            const url = `https://api.rawg.io/api/games?key=${rawgApiKey}&page=${currentPage}&page_size=${gamesPerPage}`;
+        async function loadGames(searchQuery = "") {
+            const url = `https://api.rawg.io/api/games?key=${rawgApiKey}&page=${currentPage}&page_size=${gamesPerPage}&search=${encodeURIComponent(searchQuery)}`;
             try {
                 const response = await fetch(url);
                 const data = await response.json();
                 totalGames = data.count;
-                displayGames(data.results);  // Display the games in the UI
+                displayGames(data.results);
             } catch (error) {
-                console.error('Error fetching data from RAWG API: ', error);
+                console.error("Error fetching data from RAWG API: ", error);
             }
         }
 
@@ -515,6 +519,22 @@
             loadGames();
 
         });
+
+        const searchInput = document.getElementById("searchInput");
+        const searchBtn = document.getElementById("searchBtn");
+
+        searchBtn.addEventListener("click", () => {
+            const query = searchInput.value.trim();
+            currentPage = 1;
+            loadGames(query);
+        });
+
+        const refreshBtn = document.getElementById("refreshBtn");
+
+        refreshBtn.addEventListener("click", () => {
+            location.reload();  // Refresh the page
+        });
+
 
     </script>
     <script type="module" src="./auth.js"></script>
