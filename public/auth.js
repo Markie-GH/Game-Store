@@ -16,6 +16,23 @@ import {
 const auth = getAuth();
 const db = getFirestore();
 
+import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+async function getEmailByUsername(username) {
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where("username", "==", username));
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+        // Return the email of the first matching user
+        return querySnapshot.docs[0].data().email;
+    } else {
+        throw new Error("Username not found");
+    }
+}
+
+
+
 // Listen for authentication state changes
 onAuthStateChanged(auth, (user) => {
     const signUpButton = document.querySelector('button[onclick="toggleForm(\'signUpModal\')"]');
@@ -65,21 +82,24 @@ function signUpUser() {
 }
 
 // Login function
-function loginUser() {
-    const email = document.getElementById("loginEmail").value;
+async function loginUser() {
+    const username = document.getElementById("loginUsername").value; // Get the username from the input field
     const password = document.getElementById("loginPassword").value;
 
-    // Sign in with email and password
-    signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            const user = userCredential.user;
-            alert(`Welcome back, ${user.email}`);
-            document.getElementById("loginModal").style.display = "none";
-            document.getElementById("signOutBtn").style.display = "inline-block";
-        })
-        .catch((error) => {
-            alert(error.message);
-        });
+    try {
+        // Retrieve the email associated with the username
+        const email = await getEmailByUsername(username);
+
+        // Sign in with the retrieved email and password
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        alert(`Welcome back, ${username}`);
+        document.getElementById("loginModal").style.display = "none";
+        document.getElementById("signOutBtn").style.display = "inline-block";
+    } catch (error) {
+        alert(error.message);
+    }
 }
 
 // Sign out function
