@@ -8,4 +8,4 @@ Welcome to our Game Store Website project! This website is designed to provide a
 
 🎨 User-friendly interface
 
-🔥 Game details and reviews
+🔥 Game details and Leave-a-Review section.
