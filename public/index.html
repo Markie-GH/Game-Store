@@ -439,10 +439,15 @@
         // console.log(game.id); // Check if it's defined
         let currentGameId = '';//store game ID
         async function showGameDetails(gameId) {
+            window.currentGameId = gameId; // Set the current game ID globally
+
             const url = `https://api.rawg.io/api/games/${gameId}?key=${rawgApiKey}`;  // Replace with your actual API key
             try {
                 const response = await fetch(url);
                 const data = await response.json();
+
+                        window.currentGameName = data.name;
+
 
                 // Update the modal with game details
                 document.getElementById('gameName').innerText = data.name;
@@ -540,7 +545,7 @@
     </script>
     <script type="module" src="./auth.js"></script>
     <script type="module">
-        import { postComment } from '../comments.js';
+        import { postComment } from './comments.js';
 
         // Attach the function to the global window object
         window.postComment = postComment;
